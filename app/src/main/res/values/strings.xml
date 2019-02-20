@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Assignment1</string>
+    <string name="app_name">Calculator</string>
     <string name="btn_c">C</string>
     <string name="btn_posneg">+/−</string>
     <string name="btn_per">%</string>
@@ -22,5 +22,19 @@
     <string name="btn_add">+</string>
 
     <string name="err_div0">Cannot divide by zero</string>
+
+    <string name="nav_open">Nav Open</string>
+    <string name="nav_close">Nav Close</string>
+
+    <string name="nav_history">History</string>
+    <string name="nav_about">About</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="about_name">Yang Gao</string>
+    <string name="about_date">Feb. 20, 2019</string>
+    <string name="about_desc">CEJV 669 Assignment 1 - Calculator</string>
+    <string name="about_email">Email me at: yanggao1898@gmail.com</string>
 
 </resources>

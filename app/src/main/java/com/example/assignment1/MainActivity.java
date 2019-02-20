@@ -2,18 +2,29 @@ package com.example.assignment1;
 
 import android.graphics.Path;
 import android.graphics.Point;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private class DisplayListener {
         private StringBuilder Display_String;
@@ -32,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void append(String s) {
+            Display_String.append(s);
+            UpdateDisplay();
+        }
+
+        public void append(char s) {
             Display_String.append(s);
             UpdateDisplay();
         }
@@ -68,9 +84,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+
     private DisplayListener Current_Number;
     private DisplayListener Op_Preview;
-    private DisplayListener History;
+    private StringBuilder History;
+    // private DisplayListener History;
 
     private enum OP {
         NUL, ADD, SUB, MUL, DIV;
@@ -85,15 +105,91 @@ public class MainActivity extends AppCompatActivity {
     private byte Pos;
 
     @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        int itemId = item.getItemId();
+        //TextView tv2 = findViewById(R.id.textView2);
+
+        String v;
+        if (itemId == R.id.nav_history) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+
+            Fragment historyFrag = calc_history.newInstance(History.toString());
+            ft.replace(R.id.calc_buttons_frag, historyFrag);
+            ft.addToBackStack(null);
+            ft.commit();
+        } else if (itemId == R.id.nav_about) {
+            //tv2.setText("Settings");
+            v = "Settings";
+        } else {
+            v = "Something Weird Happened";
+            Toast.makeText(this, v, Toast.LENGTH_LONG).show();
+        }
+
+        dl.closeDrawers();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Current_Number = new DisplayListener(R.id.tv_curNumber);
+        Op_Preview = new DisplayListener(R.id.tv_opPreview);
+        History = new StringBuilder();
+        // History = new DisplayListener(R.id.tv_history);
         reset();
 
-        History = new DisplayListener(R.id.tv_history);
         DivZeroErr = false;
 
+        dl = findViewById(R.id.drawer_layout);
+        t = new ActionBarDrawerToggle(this, dl,R.string.nav_open, R.string.nav_close);
+        dl.addDrawerListener(t);
+        t.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView mNavView = findViewById(R.id.nav_view);
+        mNavView.setNavigationItemSelectedListener(this);
+
+        dl.addDrawerListener(new DrawerLayout.DrawerListener() {
+
+            //TextView tv = findViewById(R.id.textView);
+            @Override
+            public void onDrawerSlide(@NonNull View view, float v) {
+                //tv.setText("......");
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View view) {
+                //tv.setText("OPENED");
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View view) {
+                //tv.setText("CLOSED");
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+
+            }
+        });
+
+        /*
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        Fragment dispFrag = calc_display.newInstance();
+        Fragment buttonFrag = calc_buttons.newInstance();
+        //ft.replace(R.id.calc_buttons_frag, historyFrag);
+        //ft.addToBackStack(null);
+
+        ft.add(R.id.main_container, dispFrag);
+        ft.add(R.id.main_container, buttonFrag);
+        ft.commit();
+        //*/
 
         /*
         double t1 = 12345.67000d;
@@ -109,6 +205,13 @@ public class MainActivity extends AppCompatActivity {
         }
         */
         // setButtonSize();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(t.onOptionsItemSelected(item))
+            return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void setButtonSize() {
@@ -163,8 +266,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reset() {
-        Current_Number = new DisplayListener(R.id.tv_curNumber);
-        Op_Preview = new DisplayListener(R.id.tv_opPreview);
+        Current_Number.reset();
+        Op_Preview.reset();
         CurOp = OP.NUL;
         LastOp = false;
         LastNum = false;
@@ -180,13 +283,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void prs_btn_posneg(View v) {
-        Numbers[Pos] = -1 * Numbers[Pos];
+        Double dispNum = Double.parseDouble(Current_Number.toString());
+        Numbers[Pos] = -1 * dispNum;
         LastOp = false;
         Current_Number.setString(num_display_helper(Numbers[Pos]));
     }
 
     public void prs_btn_per(View v) {
-        Numbers[Pos] = Numbers[Pos]/100;
+        Double dispNum = Double.parseDouble(Current_Number.toString());
+        Numbers[Pos] = dispNum/100;
         LastOp = false;
         Current_Number.setString(num_display_helper(Numbers[Pos]));
     }
@@ -201,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (Current_Number.length() == 1) {
                 Current_Number.setString(getString(R.string.num_0));
             }
+            Numbers[Pos] = Double.valueOf(Current_Number.toString());
         }
     }
 
@@ -320,8 +426,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_dot).setEnabled(true);
     }
 
-    private void prs_op_helper(OP opEnum) {
-
+    private int get_op_from_enum(OP opEnum) {
         int opRes;
 
         switch (opEnum) {
@@ -343,6 +448,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             //*/
         }
+
+        return opRes;
+    }
+
+    private void prs_op_helper(OP opEnum) {
+
+        int opRes = get_op_from_enum(opEnum);
 
         if(LastOp) {
             if(CurOp != opEnum) {
@@ -436,16 +548,26 @@ public class MainActivity extends AppCompatActivity {
                     }
             }
 
-            Op_Preview.append(" ");
-            Op_Preview.append(Current_Number.toString());
+            if (LastEql) {
+                Op_Preview.append(Current_Number.toString());
+                Op_Preview.append(" ");
+                Op_Preview.append(getString(get_op_from_enum(CurOp)));
+                Op_Preview.append(" ");
+                Op_Preview.append(num_display_helper(Numbers[1]));
+            } else {
+                Op_Preview.append(" ");
+                Op_Preview.append(Current_Number.toString());
+            }
+
             Op_Preview.append(" ");
             Op_Preview.append(getString(R.string.btn_eql));
             Op_Preview.append(" ");
             Current_Number.setString(num_display_helper(Numbers[0]));
             Op_Preview.append(Current_Number.toString());
 
-            //History.append(Op_Preview.toString());
-            //History.append("/n");
+            History.append(Op_Preview.toString());
+            History.append("\n");
+            Log.i("HISTORY-LOG: ", History.toString());
 
             Op_Preview.reset();
 

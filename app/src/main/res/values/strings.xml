@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Assignment1</string>
+    <string name="btn_c">C</string>
+    <string name="btn_posneg">+/−</string>
+    <string name="btn_per">%</string>
+    <string name="btn_del">DEL</string>
+    <string name="num_0">0</string>
+    <string name="num_1">1</string>
+    <string name="num_2">2</string>
+    <string name="num_3">3</string>
+    <string name="num_4">4</string>
+    <string name="num_5">5</string>
+    <string name="num_6">6</string>
+    <string name="num_7">7</string>
+    <string name="num_8">8</string>
+    <string name="num_9">9</string>
+    <string name="sym_dot">.</string>
+    <string name="btn_eql">=</string>
+    <string name="btn_div">÷</string>
+    <string name="btn_mul">×</string>
+    <string name="btn_sub">−</string>
+    <string name="btn_add">+</string>
+
+    <string name="err_div0">Cannot divide by zero</string>
+
+</resources>

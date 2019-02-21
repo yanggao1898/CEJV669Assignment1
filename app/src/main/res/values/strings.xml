@@ -36,5 +36,6 @@
     <string name="about_date">Feb. 20, 2019</string>
     <string name="about_desc">CEJV 669 Assignment 1 - Calculator</string>
     <string name="about_email">Email me at: yanggao1898@gmail.com</string>
+    <string name="email_address">yanggao1898@gmail.com</string>
 
 </resources>

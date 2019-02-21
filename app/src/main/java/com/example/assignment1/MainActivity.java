@@ -1,7 +1,9 @@
 package com.example.assignment1;
 
-import android.graphics.Path;
+import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -10,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
@@ -112,16 +113,28 @@ public class MainActivity extends AppCompatActivity
 
         String v;
         if (itemId == R.id.nav_history) {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
+            Fragment test = getSupportFragmentManager().findFragmentByTag("HISTORY_FRAG");
+            if (test == null || !test.isVisible()) {
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
 
-            Fragment historyFrag = calc_history.newInstance(History.toString());
-            ft.replace(R.id.calc_buttons_frag, historyFrag);
-            ft.addToBackStack(null);
-            ft.commit();
+                Fragment historyFrag = calc_history.newInstance(History.toString());
+                ft.replace(R.id.calc_buttons_frag, historyFrag, "HISTORY_FRAG");
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+
         } else if (itemId == R.id.nav_about) {
-            //tv2.setText("Settings");
-            v = "Settings";
+            Fragment test = getSupportFragmentManager().findFragmentByTag("ABOUT_FRAG");
+            if (test == null || !test.isVisible()) {
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+
+                Fragment aboutFrag = calc_about.newInstance();
+                ft.replace(R.id.calc_buttons_frag, aboutFrag, "ABOUT_FRAG");
+                ft.addToBackStack(null);
+                ft.commit();
+            }
         } else {
             v = "Something Weird Happened";
             Toast.makeText(this, v, Toast.LENGTH_LONG).show();
@@ -141,8 +154,7 @@ public class MainActivity extends AppCompatActivity
         History = new StringBuilder();
         // History = new DisplayListener(R.id.tv_history);
         reset();
-
-        DivZeroErr = false;
+        clear_zero_err();
 
         dl = findViewById(R.id.drawer_layout);
         t = new ActionBarDrawerToggle(this, dl,R.string.nav_open, R.string.nav_close);
@@ -583,4 +595,15 @@ public class MainActivity extends AppCompatActivity
     public void prs_btn_dot(View v) {
         prs_num_helper(getString(R.string.sym_dot));
     }
+
+    public void about_email(View v) {
+        Intent eIntent = new Intent(Intent.ACTION_SENDTO);
+        eIntent.setData(Uri.parse("mailto:"));
+        eIntent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.email_address));
+        eIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.about_desc));
+        if (eIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(eIntent);
+        }
+    }
+
 }

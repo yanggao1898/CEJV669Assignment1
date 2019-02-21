@@ -40,7 +40,7 @@ public class calc_about extends Fragment {
      * @return A new instance of fragment calc_about.
      */
     // TODO: Rename and change types and number of parameters
-    public static calc_about newInstance(String param1, String param2) {
+    public static calc_about newInstance() {
         calc_about fragment = new calc_about();
         Bundle args = new Bundle();
 
@@ -72,11 +72,15 @@ public class calc_about extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
+        } /*
+        else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        //*/
     }
+
+
 
     @Override
     public void onDetach() {

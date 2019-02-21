@@ -17,7 +17,6 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,7 +108,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         int itemId = item.getItemId();
-        //TextView tv2 = findViewById(R.id.textView2);
 
         String v;
         if (itemId == R.id.nav_history) {
@@ -167,55 +165,24 @@ public class MainActivity extends AppCompatActivity
 
         dl.addDrawerListener(new DrawerLayout.DrawerListener() {
 
-            //TextView tv = findViewById(R.id.textView);
             @Override
             public void onDrawerSlide(@NonNull View view, float v) {
-                //tv.setText("......");
             }
 
             @Override
             public void onDrawerOpened(@NonNull View view) {
-                //tv.setText("OPENED");
             }
 
             @Override
             public void onDrawerClosed(@NonNull View view) {
-                //tv.setText("CLOSED");
             }
 
             @Override
             public void onDrawerStateChanged(int i) {
-
             }
         });
 
-        /*
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
 
-        Fragment dispFrag = calc_display.newInstance();
-        Fragment buttonFrag = calc_buttons.newInstance();
-        //ft.replace(R.id.calc_buttons_frag, historyFrag);
-        //ft.addToBackStack(null);
-
-        ft.add(R.id.main_container, dispFrag);
-        ft.add(R.id.main_container, buttonFrag);
-        ft.commit();
-        //*/
-
-        /*
-        double t1 = 12345.67000d;
-        double t2 = 5.000d;
-
-        String ts1 = Double.toString(t1);
-        String ts2 = Double.toString(t2);
-
-        long i2 = (long) t2;
-
-        if (i2 == t2) {
-            ts2 = Long.toString(i2);
-        }
-        */
         // setButtonSize();
     }
 
@@ -227,6 +194,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setButtonSize() {
+        // UNUSED!
         // to set the button size to match
         Display disp =  getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -253,17 +221,6 @@ public class MainActivity extends AppCompatActivity
             btnContainer.setLayoutParams(p);
         }
 
-    }
-
-
-    public void buttonPressed(View v) {
-        int buttonId = v.getId();
-
-        Button b = (Button) v;
-
-        String bText = b.getText().toString();
-
-        //String x = getString(R.string.)
     }
 
     private String num_display_helper(double in) {

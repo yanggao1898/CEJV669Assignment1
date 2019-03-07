@@ -1,5 +1,7 @@
 package com.example.assignment1;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
+    private CalcViewModel cvModel;
 
     private DisplayListener Current_Number;
     private DisplayListener Op_Preview;
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction ft = fm.beginTransaction();
 
                 Fragment historyFrag = calc_history.newInstance(History.toString());
-                ft.replace(R.id.calc_buttons_frag, historyFrag, "HISTORY_FRAG");
+                ft.replace(R.id.main_container, historyFrag, "HISTORY_FRAG");
                 ft.addToBackStack(null);
                 ft.commit();
             }
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction ft = fm.beginTransaction();
 
                 Fragment aboutFrag = calc_about.newInstance();
-                ft.replace(R.id.calc_buttons_frag, aboutFrag, "ABOUT_FRAG");
+                ft.replace(R.id.main_container, aboutFrag, "ABOUT_FRAG");
                 ft.addToBackStack(null);
                 ft.commit();
             }
@@ -147,12 +150,26 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Current_Number = new DisplayListener(R.id.tv_curNumber);
-        Op_Preview = new DisplayListener(R.id.tv_opPreview);
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        Fragment displayFrag = calc_display.newInstance();
+        Fragment buttonsFrag = calc_buttons.newInstance();
+
+        ft.add(R.id.main_container, displayFrag, "DISPFRAG");
+        ft.add(R.id.main_container, buttonsFrag, "BTNFRAG");
+
+        ft.commit();
+
+        cvModel = ViewModelProviders.of(this).get(CalcViewModel.class);
+
+        Current_Number = new DisplayListener(((calc_display) displayFrag).getCNID());
+        Op_Preview = new DisplayListener(((calc_display) displayFrag).getOPID());
         History = new StringBuilder();
         // History = new DisplayListener(R.id.tv_history);
         reset();
         clear_zero_err();
+
 
         dl = findViewById(R.id.drawer_layout);
         t = new ActionBarDrawerToggle(this, dl,R.string.nav_open, R.string.nav_close);
@@ -162,6 +179,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView mNavView = findViewById(R.id.nav_view);
         mNavView.setNavigationItemSelectedListener(this);
+
+
 
         dl.addDrawerListener(new DrawerLayout.DrawerListener() {
 
@@ -181,6 +200,7 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerStateChanged(int i) {
             }
         });
+
 
 
         // setButtonSize();

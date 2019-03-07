@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 /**
@@ -20,6 +21,9 @@ import android.view.ViewGroup;
 public class calc_display extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+
+    private EditText cNum;
+    private EditText oPre;
 
     public calc_display() {
         // Required empty public constructor
@@ -49,7 +53,10 @@ public class calc_display extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calc_display, container, false);
+        View v = inflater.inflate(R.layout.fragment_calc_display, container, false);
+        cNum = v.findViewById(R.id.tv_curNumber);
+        oPre = v.findViewById(R.id.tv_opPreview);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,5 +98,13 @@ public class calc_display extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public int getCNID() {
+        return cNum.getId();
+    }
+
+    public int getOPID() {
+        return oPre.getId();
     }
 }
